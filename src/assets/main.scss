@@ -3,6 +3,7 @@
 
 body {
   margin: 0;
+  font-size: 10px;
 }
 
 #app-container {
@@ -34,6 +35,7 @@ body {
 }
 
 .gnb a {
+  font-size: 1.4rem;
   color: #bdc3c7;
   text-decoration: none;
   font-weight: bold;
@@ -74,6 +76,13 @@ body {
   /* display: flex;
   flex-grow: 1;
   overflow: hidden; */
+}
+
+.time {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 1.4rem;
 }
 
 .lnb {
@@ -157,7 +166,6 @@ h1 {
 }
 
 .divider {
-  margin: 40px 0;
   border: none;
   border-top: 1px solid #eee;
 }
@@ -232,6 +240,10 @@ h1 {
 
   .news-link h3 {
     font-size: 1.1rem;
+    b {
+      color: #1f36b4;
+      font-weight: bold;
+    }
   }
 
   .news-link p {
@@ -245,6 +257,11 @@ h1 {
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
+
+    b {
+      color: #b41f51;
+      font-weight: bold;
+    }
   }
 
   .news-date {
@@ -308,5 +325,68 @@ h1 {
 
   section {
     width: 50%;
+  }
+}
+
+.weather-widget {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.25rem 1rem;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  // height: 40px;
+  overflow: hidden;
+
+  .current-weather {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 700;
+    font-size: 1rem;
+    white-space: nowrap;
+
+    .icon {
+      font-size: 1.2rem;
+    }
+  }
+
+  .divider {
+    width: 1px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  .weekly-forecast {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+
+    .day-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      line-height: 1;
+      gap: 2px;
+
+      .day-name {
+        font-size: 0.6rem;
+        opacity: 0.8;
+        text-transform: uppercase;
+      }
+
+      .day-icon {
+        font-size: 0.9rem;
+      }
+
+      .day-temp {
+        font-size: 0.7rem;
+        font-weight: 600;
+      }
+    }
   }
 }

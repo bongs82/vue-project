@@ -6,17 +6,26 @@ import { auth } from '@/firebase'
 import { GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from 'firebase/auth'
 import domtoimage from 'dom-to-image'
 import html2canvas from 'html2canvas'
-
+import WeatherWidget from '@/components/WeatherWidget.vue'
+import AnalogClock from '@/components/AnalogClock.vue'
 const user = ref(null)
 const isLoggedIn = ref(false)
 
 const container = ref(null)
+const currentTime = ref(new Date().toLocaleTimeString('en-US', { hour12: false }))
 
 onMounted(() => {
   onAuthStateChanged(auth, (currentUser) => {
     user.value = currentUser
     isLoggedIn.value = !!currentUser
   })
+
+  const timer = setInterval(() => {
+    currentTime.value = new Date().toLocaleTimeString('en-US', { hour12: false })
+  }, 1000)
+
+  // Cleanup interval on component unmount (though App.vue rarely unmounts)
+  return () => clearInterval(timer)
 })
 
 const loginWithGoogle = async () => {
@@ -97,6 +106,11 @@ const saveAsImage = () => {
         <RouterLink to="/user">User</RouterLink>
         <RouterLink to="/login">Login</RouterLink>
       </div>
+      <div class="time">
+        <AnalogClock />
+        <span>{{ currentTime }}</span>
+      </div>
+      <WeatherWidget class="weather" />
       <div class="gnb-auth">
         <span v-if="isLoggedIn">Welcome, {{ user.displayName }}</span>
         <button v-if="!isLoggedIn" @click="loginWithGoogle" class="auth-btn">

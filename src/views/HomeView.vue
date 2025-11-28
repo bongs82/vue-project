@@ -70,7 +70,7 @@ const groupedNews = computed(() => {
 })
 
 const swiperInstance = ref(null)
-const _isSwiperAutoplay = ref(true)
+const _isSwiperAutoplay = ref(false)
 
 const onSwiper = (swiper) => {
   console.log(swiper)
@@ -147,7 +147,7 @@ onMounted(() => {
         :modules="modules"
         :a11y="true"
         :autoplay="{
-          enabled: true,
+          enabled: _isSwiperAutoplay.value,
           delay: 3000,
         }"
         :loop="true"
