@@ -8,6 +8,7 @@ import domtoimage from 'dom-to-image'
 import html2canvas from 'html2canvas'
 import WeatherWidget from '@/components/WeatherWidget.vue'
 import AnalogClock from '@/components/AnalogClock.vue'
+import TrendingIssues from '@/components/TrendingIssues.vue'
 const user = ref(null)
 const isLoggedIn = ref(false)
 
@@ -111,6 +112,7 @@ const saveAsImage = () => {
         <span>{{ currentTime }}</span>
       </div>
       <WeatherWidget class="weather" />
+      <TrendingIssues />
       <div class="gnb-auth">
         <span v-if="isLoggedIn">Welcome, {{ user.displayName }}</span>
         <button v-if="!isLoggedIn" @click="loginWithGoogle" class="auth-btn">
