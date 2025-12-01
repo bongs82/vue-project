@@ -9,17 +9,55 @@ import html2canvas from 'html2canvas'
 import WeatherWidget from '@/components/WeatherWidget.vue'
 import AnalogClock from '@/components/AnalogClock.vue'
 import TrendingIssues from '@/components/TrendingIssues.vue'
+import { fetchBackgroundImage as fetchPexelsImage, getTimeBasedQuery } from '@/api/pexels'
+
 const user = ref(null)
 const isLoggedIn = ref(false)
+const backgroundImage = ref('')
 
 const container = ref(null)
 const currentTime = ref(new Date().toLocaleTimeString('en-US', { hour12: false }))
+
+// Pexels API로 고품질 배경 이미지 가져오기
+const fetchBackgroundImage = async () => {
+  const width = window.innerWidth
+  const height = window.innerHeight
+  
+  // 시간대별 검색 키워드 가져오기
+  const query = getTimeBasedQuery()
+  
+  // Pexels API로 이미지 가져오기
+  const imageUrl = await fetchPexelsImage(query, width, height)
+  
+  if (imageUrl) {
+    backgroundImage.value = `url(${imageUrl})`
+  } else {
+    // API 실패 시 폴백 그라데이션
+    const hour = new Date().getHours()
+    let gradient = ''
+    
+    if (hour >= 5 && hour < 12) {
+      gradient = 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'
+    } else if (hour >= 12 && hour < 17) {
+      gradient = 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)'
+    } else if (hour >= 17 && hour < 20) {
+      gradient = 'linear-gradient(135deg, #ff9a56 0%, #ff6a88 50%, #a960ee 100%)'
+    } else {
+      gradient = 'linear-gradient(135deg, #2e1437 0%, #1f4037 50%, #99f2c8 100%)'
+    }
+    
+    backgroundImage.value = gradient
+  }
+}
 
 onMounted(() => {
   onAuthStateChanged(auth, (currentUser) => {
     user.value = currentUser
     isLoggedIn.value = !!currentUser
   })
+
+  // 배경 이미지 로드
+  fetchBackgroundImage()
 
   const timer = setInterval(() => {
     currentTime.value = new Date().toLocaleTimeString('en-US', { hour12: false })
@@ -99,7 +137,11 @@ const saveAsImage = () => {
 </script>
 
 <template>
-  <div id="app-container" ref="container">
+  <div 
+    id="app-container" 
+    ref="container"
+    :style="{ background: backgroundImage }"
+  >
     <nav class="gnb">
       <div class="gnb-links">
         <RouterLink to="/">Home</RouterLink>

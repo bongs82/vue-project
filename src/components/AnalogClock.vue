@@ -31,6 +31,7 @@ onUnmounted(() => {
   <div class="analog-clock">
     <svg viewBox="0 0 100 100">
       <!-- Clock Face -->
+       
       <circle
         cx="50"
         cy="50"
@@ -86,19 +87,3 @@ onUnmounted(() => {
     </svg>
   </div>
 </template>
-
-<style scoped>
-.analog-clock {
-  width: 60px;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-svg {
-  width: 100%;
-  height: 100%;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-}
-</style>

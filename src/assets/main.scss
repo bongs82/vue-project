@@ -1,9 +1,12 @@
 @import './base.scss';
 @import './exchange.scss';
 
+html {
+  font-size: 10px;
+}
+
 body {
   margin: 0;
-  font-size: 10px;
 }
 
 #app-container {
@@ -11,7 +14,16 @@ body {
   flex-direction: column;
   height: 100vh; */
   width: 100%;
+  height: 100vh;
   /* overflow: hidden; */
+
+  // 시간대별 동적 그라데이션 배경
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-attachment: fixed !important;
+  position: relative !important;
+  transition: background 1s ease !important; // 부드러운 배경 전환
 }
 
 .gnb {
@@ -19,7 +31,7 @@ body {
   top: 0;
   left: 0;
   /* width: 100%; */
-  background-color: #2c3e50;
+  background-color: rgba(44, 62, 80, 0.8);
   color: white;
   padding: 1rem;
   display: flex;
@@ -36,7 +48,7 @@ body {
 }
 
 .gnb a {
-  font-size: 1.4rem;
+  font-size: 2rem;
   color: #bdc3c7;
   text-decoration: none;
   font-weight: bold;
@@ -50,18 +62,18 @@ body {
   display: flex;
   align-items: center;
   gap: 1rem;
-}
 
-.gnb-auth span {
-  font-size: 0.9rem;
+  span {
+    font-size: 1.2rem;
+  }
 }
 
 .auth-btn {
-  padding: 6px 12px;
+  padding: 0.6rem 1.2rem;
   border: 1px solid #42b883;
   background-color: transparent;
   color: #42b883;
-  border-radius: 4px;
+  border-radius: 0.4rem;
   cursor: pointer;
   transition:
     background-color 0.2s,
@@ -83,16 +95,16 @@ body {
   display: flex;
   align-items: center;
   gap: 1rem;
-  width: 160px;
+  width: 16rem;
   font-size: 1.4rem;
 
   span {
-    width: 80px;
+    width: 8rem;
   }
 }
 
 .lnb {
-  width: 200px;
+  width: 20rem;
   background-color: #f8f9fa;
   padding: 1rem;
   border-right: 1px solid #e9ecef;
@@ -104,23 +116,23 @@ body {
 }
 
 .container {
-  padding: 20px;
-  max-width: 960px;
+  padding: 2rem;
+  max-width: 96rem;
   margin: 0 auto;
 }
 
 h1 {
-  margin-bottom: 20px;
+  margin-bottom: 2rem;
 }
 
 .save-btn {
   // margin-bottom: 20px;
   // padding: 8px 15px;
-  width: 30px;
-  height: 30px;
+  width: 3rem;
+  height: 3rem;
   border: none;
   background: #42b883 url('../assets/screenshot-icon.png') no-repeat center center;
-  background-size: 30px;
+  background-size: 3rem;
   color: white;
   border-radius: 4px;
   cursor: pointer;
@@ -147,14 +159,14 @@ h1 {
 }
 
 .list-part {
-  padding: 12px 15px;
+  padding: 1.2rem 1.5rem;
   font-weight: bold;
   border-right: 1px solid #ccc;
   align-self: center;
 }
 
 .detail-part {
-  padding: 12px 15px;
+  padding: 1.2rem 1.5rem;
   align-self: center;
   overflow: hidden;
   /* This is crucial for grid item to truncate its content */
@@ -178,9 +190,17 @@ h1 {
 
 .news-section {
 
-  // margin-top: 20px;
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 1.2rem;
+  padding: 2rem;
+
+  h2 {
+    font-size: 2rem;
+    color: #fff;
+  }
+
   .swiper {
-    padding-bottom: 30px;
+    padding-bottom: 3rem;
   }
 
   .swiper-pagination {
@@ -189,19 +209,19 @@ h1 {
 
   .search-box {
     display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
+    gap: 1rem;
+    margin-top: 1.5rem;
   }
 
   .search-box input {
-    padding: 8px;
+    padding: 0.8rem;
     border: 1px solid #ccc;
     border-radius: 4px;
     flex: 1;
   }
 
   .search-box button {
-    padding: 8px 15px;
+    padding: 0.8rem 1.5rem;
     background-color: #1f36b4;
     /* Naver Green */
     color: white;
@@ -211,7 +231,7 @@ h1 {
   }
 
   .news-swiper {
-    padding-bottom: 40px;
+    padding-bottom: 4rem;
     /* Pagination space */
   }
 
@@ -227,7 +247,7 @@ h1 {
 
   .news-item-card {
     // border-radius: 8px;
-    padding: 15px;
+    padding: 1.5rem;
     box-sizing: border-box;
     background-color: #fff;
 
@@ -249,7 +269,7 @@ h1 {
   }
 
   .news-link h3 {
-    font-size: 1.1rem;
+    font-size: 1.6rem;
 
     b {
       color: #1f36b4;
@@ -258,9 +278,9 @@ h1 {
   }
 
   .news-link p {
-    margin: 5px 0 0 0;
+    margin: 0.5rem 0 0 0;
     color: #666;
-    font-size: 0.9rem;
+    font-size: 1.4rem;
     line-height: 1.4;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -282,31 +302,32 @@ h1 {
 }
 
 .exchange-section {
-  padding: 20px;
+  padding: 2rem;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border-radius: 12px;
   color: white;
 
   h2 {
-    margin: 0 0 15px 0;
-    font-size: 1.3rem;
+    font-size: 2rem;
   }
 }
 
 .exchange-rates {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 15px;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
 }
 
 .exchange-item {
   background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(10px);
-  padding: 15px;
+  padding: 1.5rem;
   border-radius: 8px;
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  justify-content: space-between;
+  // flex-direction: column;
+  gap: 0.8rem;
   transition: transform 0.2s;
 
   &:hover {
@@ -315,7 +336,7 @@ h1 {
   }
 
   .currency-name {
-    font-size: 0.9rem;
+    font-size: 1.6rem;
     opacity: 0.9;
   }
 
@@ -332,10 +353,16 @@ h1 {
 
 .top-news {
   display: flex;
-  gap: 20px;
+  gap: 1rem;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  padding: 0 1rem;
+  box-sizing: border-box;
 
   section {
-    width: 50%;
+    width: calc(50% - 1rem);
   }
 }
 
@@ -410,8 +437,8 @@ h1 {
 .trend-btn {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 10px 20px;
+  gap: 1rem;
+  padding: 0.5rem 1rem;
   background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
   border: none;
   border-radius: 24px;
@@ -420,7 +447,7 @@ h1 {
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
-  width: 300px;
+  width: 30rem;
 }
 
 // .trend-btn:hover {
@@ -449,26 +476,26 @@ h1 {
 .current-issue {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 1rem;
   flex: 1;
   min-width: 0;
 }
 
 .issue-number {
   flex-shrink: 0;
-  width: 24px;
-  height: 24px;
+  width: 2rem;
+  height: 2rem;
   background: rgba(255, 255, 255, 0.3);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
+  font-size: 1rem;
   font-weight: 700;
 }
 
 .issue-text {
-  font-size: 14px;
+  font-size: 1rem;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -496,14 +523,14 @@ h1 {
   position: absolute;
   top: calc(100%);
   left: 0;
-  padding-top: 10px;
+  padding-top: 1rem;
 
   .issues-dropdown-content {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     border-radius: 16px;
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
-    width: 300px;
-    max-height: 600px;
+    width: 30rem;
+    max-height: 60rem;
     overflow: hidden;
     z-index: 100;
     display: flex;
@@ -512,14 +539,14 @@ h1 {
 }
 
 .dropdown-header {
-  padding: 20px 24px;
+  padding: 1rem 1.2rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   background: rgba(255, 255, 255, 0.1);
 }
 
 .dropdown-header h3 {
   margin: 0;
-  font-size: 18px;
+  font-size: 1.8rem;
   font-weight: 700;
   color: white;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -536,7 +563,7 @@ h1 {
 
 .issue-item {
   display: flex;
-  gap: 14px;
+  gap: 1rem;
   padding: 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   transition: all 0.3s ease;
@@ -545,8 +572,8 @@ h1 {
 
 .issue-link {
   display: flex;
-  gap: 14px;
-  padding: 16px 24px;
+  gap: 1.4rem;
+  padding: 1.6rem 2.4rem;
   width: 100%;
   text-decoration: none;
   color: inherit;
@@ -569,15 +596,15 @@ h1 {
 
 .issue-rank {
   flex-shrink: 0;
-  width: 28px;
-  height: 28px;
+  width: 2.8rem;
+  height: 2.8rem;
   background: rgba(255, 255, 255, 0.2);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 13px;
+  font-size: 1.3rem;
   color: white;
 }
 
@@ -595,8 +622,8 @@ h1 {
 }
 
 .issue-title {
-  margin: 0 0 6px 0;
-  font-size: 15px;
+  margin: 0 0 0.6rem 0;
+  font-size: 1.5rem;
   font-weight: 600;
   color: white;
   overflow: hidden;
@@ -606,8 +633,8 @@ h1 {
 
 .issue-meta {
   display: flex;
-  gap: 10px;
-  font-size: 12px;
+  gap: 1rem;
+  font-size: 1.2rem;
   color: rgba(255, 255, 255, 0.7);
 }
 
@@ -671,25 +698,19 @@ h1 {
   background: rgba(255, 255, 255, 0.4);
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .trend-btn {
-    min-width: 250px;
-    max-width: 300px;
-  }
+.analog-clock {
+  width: 5rem;
+  height: 5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  .issues-dropdown {
-    min-width: 100%;
-    max-width: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-
-  .issue-item {
-    padding: 14px 20px;
-  }
-
-  .issue-title {
-    font-size: 14px;
+  svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
   }
 }
+
+/* Responsive */
+@media (max-width: 768px) {}
