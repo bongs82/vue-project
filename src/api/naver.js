@@ -5,7 +5,7 @@ export const fetchNews = async (query = 'IT') => {
   try {
     // Vite proxy will redirect /api/naver to https://openapi.naver.com
     const response = await fetch(
-      `/api/naver/v1/search/news.json?query=${encodeURIComponent(query)}&display=12&sort=sim`,
+      `/api/naver/v1/search/news.json?query=${encodeURIComponent(query)}&display=10&sort=sim`,
       {
         method: 'GET',
         headers: {

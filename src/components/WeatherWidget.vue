@@ -53,9 +53,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="weather-widget">
-    <div class="current-weather">
-      <div class="icon-wrapper">
+  <div class="weather_widget">
+    <div class="current_weather">
+      <div class="icon_wrapper">
         <WeatherIcon :code="currentCode" />
       </div>
       <span class="temp">{{ currentTemp }}°C</span>
@@ -63,20 +63,20 @@ onMounted(() => {
 
     <div class="divider"></div>
 
-    <div class="weekly-forecast">
-      <div v-for="day in weeklyForecast" :key="day.day" class="day-item">
-        <span class="day-name">{{ day.day }}</span>
-        <div class="day-icon-wrapper">
+    <div class="weekly_forecast">
+      <div v-for="day in weeklyForecast" :key="day.day" class="day_item">
+        <span class="day_name">{{ day.day }}</span>
+        <div class="day_icon_wrapper">
           <WeatherIcon :code="day.code" />
         </div>
-        <span class="day-temp">{{ day.temp }}°</span>
+        <span class="day_temp">{{ day.temp }}°</span>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped lang="scss">
-.weather-widget {
+.weather_widget {
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -90,7 +90,7 @@ onMounted(() => {
   // height: 40px;
   overflow: hidden;
 
-  .current-weather {
+  .current_weather {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -98,7 +98,7 @@ onMounted(() => {
     font-size: 1rem;
     white-space: nowrap;
 
-    .icon-wrapper {
+    .icon_wrapper {
       width: 32px;
       height: 32px;
     }
@@ -110,30 +110,30 @@ onMounted(() => {
     background: rgba(255, 255, 255, 0.3);
   }
 
-  .weekly-forecast {
+  .weekly_forecast {
     display: flex;
     align-items: center;
     gap: 0.8rem;
 
-    .day-item {
+    .day_item {
       display: flex;
       flex-direction: column;
       align-items: center;
       line-height: 1;
       gap: 2px;
 
-      .day-name {
+      .day_name {
         font-size: 0.6rem;
         opacity: 0.8;
         text-transform: uppercase;
       }
 
-      .day-icon-wrapper {
+      .day_icon_wrapper {
         width: 20px;
         height: 20px;
       }
 
-      .day-temp {
+      .day_temp {
         font-size: 0.7rem;
         font-weight: 600;
       }

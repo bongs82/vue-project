@@ -28,10 +28,10 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="analog-clock">
+  <div class="analog_clock">
     <svg viewBox="0 0 100 100">
       <!-- Clock Face -->
-       
+
       <circle
         cx="50"
         cy="50"

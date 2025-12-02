@@ -22,15 +22,15 @@ const handleLogin = async () => {
   error.value = ''
 
   try {
-    const userDocRef = doc(db, "member", "user")
+    const userDocRef = doc(db, 'member', 'user')
     const userDocSnap = await getDoc(userDocRef)
 
     if (userDocSnap.exists()) {
       const data = userDocSnap.data()
       if (data.userList && Array.isArray(data.userList)) {
         const hashedPassword = await hashPassword(password.value)
-        const user = data.userList.find(u => u.id === id.value && u.password === hashedPassword)
-        
+        const user = data.userList.find((u) => u.id === id.value && u.password === hashedPassword)
+
         if (user) {
           alert('Login Successful!')
           // Redirect to home or user page
@@ -45,7 +45,7 @@ const handleLogin = async () => {
       error.value = 'System Error: Member data not found'
     }
   } catch (e) {
-    console.error("Login error:", e)
+    console.error('Login error:', e)
     error.value = 'Login failed: ' + e.message
   } finally {
     loading.value = false
@@ -61,10 +61,16 @@ const handleLogin = async () => {
         <label for="id">ID</label>
         <input id="id" v-model="id" type="text" placeholder="Enter ID" @keyup.enter="handleLogin" />
       </div>
-      
+
       <div class="input-group">
         <label for="password">Password</label>
-        <input id="password" v-model="password" type="password" placeholder="Enter Password" @keyup.enter="handleLogin" />
+        <input
+          id="password"
+          v-model="password"
+          type="password"
+          placeholder="Enter Password"
+          @keyup.enter="handleLogin"
+        />
       </div>
 
       <button @click="handleLogin" :disabled="loading">
@@ -83,7 +89,7 @@ const handleLogin = async () => {
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
@@ -115,7 +121,7 @@ input {
 
 button {
   padding: 10px;
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   border: none;
   border-radius: 4px;

@@ -7,25 +7,25 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView
+      component: HomeView,
     },
     {
       path: '/about',
       name: 'about',
       // 이 경로는 처음 방문할 때만 컴포넌트를 로드합니다 (Lazy-loading).
-      component: () => import('@/views/AboutView.vue')
+      component: () => import('@/views/AboutView.vue'),
     },
     {
       path: '/user/:id?',
       name: 'user',
-      component: () => import('@/views/UserView.vue')
+      component: () => import('@/views/UserView.vue'),
     },
     {
       path: '/login',
       name: 'login',
-      component: () => import('@/views/LoginView.vue')
-    }
-  ]
+      component: () => import('@/views/LoginView.vue'),
+    },
+  ],
 })
 
 export default router
