@@ -22,18 +22,46 @@ const list = ref([
   },
 ])
 
+// YouTube Shorts 데이터 리스트
+const shortsList = ref([])
+const isLoadingShorts = ref(true)
+
+// Fallback Data (API 키가 없거나 호출 실패 시 사용)
+const fallbackShorts = [
+  { id: 'qZ_0_R11-t0', title: '축구계 최고의 신사 손흥민' },
+  { id: 'wV-oF2T7e_s', title: '베프를 만난 손흥민의 반응' },
+  { id: 'Q6wR_k0aJ-g', title: '머리 스타일이 별로라는 벤 데이비스' },
+  { id: 'c0Zt_6kR5bQ', title: '손흥민 웃긴 장면 모음 2' },
+  { id: 'e_R5g_5Q74Q', title: '손흥민 웃긴 장면 모음 3' },
+  { id: 'eG1g2j_3q1M', title: '손흥민 웃긴 장면 컴필레이션' },
+  { id: '-0p5CJdJpg8', title: '빵 터진 손흥민' },
+  { id: 'qZ_0_R11-t0', title: '쏘니의 훈훈한 순간들' },
+  { id: 'wV-oF2T7e_s', title: '절친과의 재회' },
+  { id: 'Q6wR_k0aJ-g', title: '쏘니 vs 벤 데이비스' },
+]
+
 import { fetchNews } from '@/api/naver'
 import { fetchExchangeRates, fetchHistoricalRates } from '@/api/exchange'
+import { fetchYoutubeShorts } from '@/api/youtube'
 import { Swiper, SwiperSlide } from 'swiper/vue'
-import { Navigation, Pagination, Autoplay, A11y } from 'swiper/modules'
+import {
+  Navigation,
+  Pagination,
+  Autoplay,
+  A11y,
+  EffectCoverflow,
+  EffectCards,
+} from 'swiper/modules'
 import ExchangeChart from '@/components/ExchangeChart.vue'
 import 'swiper/css'
 import 'swiper/css/autoplay'
 import 'swiper/css/a11y'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
+import 'swiper/css/effect-coverflow'
+import 'swiper/css/effect-cards'
 
-const modules = [Navigation, Pagination, Autoplay, A11y]
+const modules = [Navigation, Pagination, Autoplay, A11y, EffectCoverflow, EffectCards]
 const moreNewsExchange = ref(false)
 
 // 환율 관련 로직
@@ -50,7 +78,7 @@ const loadHistoricalRates = async () => {
 
 // 뉴스 관련 로직
 const newsList = ref([])
-const searchQuery = ref('IT')
+const searchQuery = ref('손흥민')
 const newsKey = ref(0)
 
 const loadNews = async () => {
@@ -75,6 +103,11 @@ const groupedNews = computed(() => {
 
 const swiperInstance = ref(null)
 const _isSwiperAutoplay = ref(false)
+const playingIndex = ref(-1)
+
+const playVideo = (index) => {
+  playingIndex.value = index
+}
 
 const onSwiper = (swiper) => {
   console.log(swiper)
@@ -83,6 +116,10 @@ const onSwiper = (swiper) => {
 
 const onSlideChange = () => {
   console.log('slide change')
+}
+
+const onShortsSlideChange = () => {
+  playingIndex.value = -1
 }
 
 //모드 전환 시 Swiper 높이 및 상태 업데이트
@@ -135,14 +172,82 @@ const startAutoplay = () => {
   }
 }
 
-onMounted(() => {
+onMounted(async () => {
+  console.log('HomeView Mounted')
   loadNews()
   loadExchangeRates()
   loadHistoricalRates()
+
+  // YouTube Shorts 로드
+  console.log('Starting to load shorts...')
+  isLoadingShorts.value = true
+  try {
+    const fetchedShorts = await fetchYoutubeShorts('손흥민')
+    console.log('Fetched Shorts:', fetchedShorts)
+
+    if (fetchedShorts && fetchedShorts.length > 0) {
+      // 100개 중 랜덤하게 10개 선택
+      const shuffled = fetchedShorts.sort(() => 0.5 - Math.random())
+      shortsList.value = shuffled.slice(0, 10)
+    } else {
+      console.warn('YouTube API returned no results or failed. Using fallback.')
+      shortsList.value = fallbackShorts
+    }
+  } catch (e) {
+    console.error('Failed to load shorts', e)
+    shortsList.value = fallbackShorts
+  } finally {
+    console.log('Finished loading shorts. Setting isLoadingShorts to false.')
+    isLoadingShorts.value = false
+  }
 })
 </script>
 
 <template>
+  <div class="media">
+    <h2>손흥민 유튜브 숏츠</h2>
+    <div v-if="isLoadingShorts" class="loading_shorts">
+      <p>최신 숏츠를 불러오는 중입니다...</p>
+    </div>
+    <swiper
+      v-else
+      :modules="modules"
+      :effect="'cards'"
+      :grab-cursor="true"
+      :pagination="{ clickable: true }"
+      :navigation="true"
+      :loop="true"
+      class="shorts_swiper"
+      @slideChange="onShortsSlideChange"
+    >
+      <swiper-slide v-for="(short, index) in shortsList" :key="index" class="shorts_slide">
+        <div class="video_wrapper" @click="playVideo(index)">
+          <div v-if="playingIndex === index" class="iframe_container">
+            <iframe
+              :src="`https://www.youtube.com/embed/${short.id}?autoplay=1`"
+              title="YouTube video player"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen
+            ></iframe>
+          </div>
+          <div v-else class="thumbnail_container">
+            <img
+              :src="`https://i.ytimg.com/vi/${short.id}/hqdefault.jpg`"
+              :alt="short.title"
+              class="thumbnail"
+            />
+            <div class="play_button">
+              <svg viewBox="0 0 24 24" width="48" height="48" fill="white">
+                <path d="M8 5v14l11-7z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <p class="shorts_title">{{ short.title }}</p>
+      </swiper-slide>
+    </swiper>
+  </div>
   <div class="top_news">
     <button
       :class="['more_btn', { more_btn_active: moreNewsExchange }]"
@@ -248,7 +353,7 @@ onMounted(() => {
           delay: 3000,
         }"
         :loop="true"
-        :direction="'vertical'"
+        :direction="moreNewsExchange ? 'horizontal' : 'vertical'"
         :slides-per-view="1"
         :pagination="{ el: '.news_pagination', clickable: true }"
         class="news_swiper"
@@ -296,3 +401,119 @@ onMounted(() => {
     </ul>
   </section>
 </template>
+
+<style scoped>
+/* YouTube Shorts Carousel Styles */
+.media {
+  width: 35rem;
+  margin: 0 auto;
+  padding: 2rem;
+  /* background-color: #f9f9f9;
+  border-bottom: 1px solid #eee; */
+}
+
+.media h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #333;
+  text-align: center;
+}
+
+.shorts_swiper {
+  width: 100%;
+  padding-bottom: 3rem; /* Space for pagination */
+}
+
+.shorts_slide {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  width: 300px; /* Fixed width for 3D effect */
+}
+
+.shorts_slide:hover {
+  transform: translateY(-5px);
+}
+
+.video_wrapper {
+  position: relative;
+  width: 100%;
+  padding-top: 177.77%; /* 9:16 Aspect Ratio for Shorts */
+  background: #000;
+  cursor: pointer;
+}
+
+.iframe_container,
+.thumbnail_container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.video_wrapper iframe,
+.thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.play_button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 64px;
+  height: 64px;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s;
+}
+
+.video_wrapper:hover .play_button {
+  background: rgba(255, 0, 0, 0.8);
+}
+
+.shorts_title {
+  overflow: hidden;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 1rem;
+  background-color: rgba(0, 0, 0, 0.5);
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+  box-sizing: border-box;
+  text-overflow: ellipsis;
+}
+
+/* Custom Swiper Navigation/Pagination Styles if needed */
+:deep(.swiper-button-next),
+:deep(.swiper-button-prev) {
+  color: #333;
+}
+
+.loading_shorts {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.2rem;
+  color: #666;
+}
+
+:deep(.swiper-pagination-bullet-active) {
+  background: #333;
+}
+</style>

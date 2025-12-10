@@ -26,3 +26,25 @@ export const fetchNews = async (query = 'IT') => {
     return []
   }
 }
+
+// Fetch worldwide top news (Google News RSS) – returns array of items {title, link, pubDate}
+export const fetchGlobalTopNews = async () => {
+  try {
+    const response = await fetch('/google-news/rss?hl=ko&gl=KR&ceid=KR:ko')
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+    const rssText = await response.text()
+    const parser = new DOMParser()
+    const xmlDoc = parser.parseFromString(rssText, 'application/xml')
+    const items = Array.from(xmlDoc.querySelectorAll('item')).map((item) => ({
+      title: item.querySelector('title')?.textContent || 'No title',
+      link: item.querySelector('link')?.textContent || '#',
+      pubDate: item.querySelector('pubDate')?.textContent || new Date().toISOString(),
+    }))
+    return items
+  } catch (error) {
+    console.error('Error fetching global top news:', error)
+    return []
+  }
+}

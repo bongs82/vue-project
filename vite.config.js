@@ -6,13 +6,10 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [
-    vue(),
-    vueDevTools(),
-  ],
+  plugins: [vue(), vueDevTools()],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
   server: {
@@ -22,6 +19,22 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api\/naver/, ''),
         secure: false,
+      },
+      '/google-news': {
+        target: 'https://news.google.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/google-news/, ''),
+        secure: false,
+      },
+      '/naver-weather': {
+        target: 'https://search.naver.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/naver-weather/, ''),
+        secure: false,
+        headers: {
+          'User-Agent':
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        },
       },
     },
   },

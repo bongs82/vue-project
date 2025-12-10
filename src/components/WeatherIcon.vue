@@ -14,6 +14,7 @@ const weatherType = computed(() => {
   if (c === 2 || c === 3 || c === 45 || c === 48) return 'cloudy'
   if ((c >= 51 && c <= 67) || (c >= 80 && c <= 82)) return 'rain'
   if ((c >= 71 && c <= 77) || (c >= 85 && c <= 86)) return 'snow'
+  if (c === 68) return 'rain_snow'
   if (c >= 95 && c <= 99) return 'thunder'
   return 'unknown'
 })
@@ -158,6 +159,38 @@ const weatherType = computed(() => {
         <circle cx="40" cy="48" r="2" fill="white" class="snow-flake f3" />
       </g>
 
+      <!-- Rain & Snow: Cloud + Drops + Flakes -->
+      <g v-if="weatherType === 'rain_snow'" class="rain-snow-group">
+        <path
+          d="M46,40 H18 c-4.4,0 -8,-3.6 -8,-8 0,-4.4 3.6,-8 8,-8 0.6,0 1.2,0.1 1.8,0.2 C18.9,18.7 23.6,14 29,14 c4.8,0 8.8,3.4 9.8,8 0.7,-0.2 1.5,-0.3 2.2,-0.3 5.5,0 10,4.5 10,10 0,4.6 -3.2,8.5 -7.5,9.6"
+          fill="#CFD8DC"
+        />
+        <!-- Rain drops on left -->
+        <line
+          x1="22"
+          y1="44"
+          x2="22"
+          y2="52"
+          stroke="#4FC3F7"
+          stroke-width="3"
+          stroke-linecap="round"
+          class="rain-drop d1"
+        />
+        <line
+          x1="30"
+          y1="44"
+          x2="30"
+          y2="52"
+          stroke="#4FC3F7"
+          stroke-width="3"
+          stroke-linecap="round"
+          class="rain-drop d2"
+        />
+        <!-- Snow flakes on right -->
+        <circle cx="38" cy="48" r="2" fill="white" class="snow-flake f2" />
+        <circle cx="46" cy="48" r="2" fill="white" class="snow-flake f3" />
+      </g>
+
       <!-- Thunder: Cloud + Bolt -->
       <g v-if="weatherType === 'thunder'" class="thunder-group">
         <path
@@ -218,6 +251,7 @@ const weatherType = computed(() => {
 .cloud-group,
 .rain-group,
 .snow-group,
+.rain-snow-group,
 .thunder-group {
   animation: float 3s ease-in-out infinite;
 }
