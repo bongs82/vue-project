@@ -1,0 +1,22 @@
+/* Global CSS Reset */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Hello World Styles */
+.hello-world {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
