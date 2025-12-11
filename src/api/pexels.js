@@ -9,8 +9,13 @@ const PEXELS_API_KEY = import.meta.env.VITE_PEXELS_API_KEY
  */
 export const fetchBackgroundImage = async (query = 'nature', width = 1920, height = 1080) => {
   try {
+    if (!PEXELS_API_KEY) {
+      console.warn('Pexels API key is missing. Skipping background image fetch.')
+      return null
+    }
+
     const response = await fetch(
-      `https://api.pexels.com/v1/search?query=${query}&orientation=landscape&size=large&per_page=15`,
+      `/api/pexels/v1/search?query=${query}&orientation=landscape&size=large&per_page=15`,
       {
         headers: {
           Authorization: PEXELS_API_KEY,
@@ -19,7 +24,9 @@ export const fetchBackgroundImage = async (query = 'nature', width = 1920, heigh
     )
 
     if (!response.ok) {
-      throw new Error(`Pexels API error! status: ${response.status}`)
+      // 401 Unauthorized etc.
+      console.warn(`Pexels API error! status: ${response.status}`)
+      return null
     }
 
     const data = await response.json()
@@ -35,7 +42,8 @@ export const fetchBackgroundImage = async (query = 'nature', width = 1920, heigh
 
     return null
   } catch (error) {
-    console.error('Error fetching Pexels image:', error)
+    // 네트워크 에러(CORS 등)가 발생해도 앱이 멈추지 않도록 경고만 표시
+    console.warn('Pexels image fetch failed (likely CORS or network issue):', error)
     return null
   }
 }

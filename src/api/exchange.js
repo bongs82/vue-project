@@ -25,33 +25,53 @@ export const fetchHistoricalRates = async () => {
       let url = `https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@${dateStr}/v1/currencies/usd.json`
 
       // 오늘 날짜(i === 0)인 경우, 아직 날짜별 파일이 생성되지 않았을 수 있으므로 @latest 엔드포인트 사용
-      // 이렇게 하면 404 에러를 방지하고 가장 최신 데이터를 가져올 수 있음
       if (i === 0) {
         url = 'https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json'
+      } else if (i === 1) {
+        // 어제 날짜(i === 1)도 API 업데이트 시점에 따라 404가 발생할 수 있음
+        // 이 경우 404 에러를 방지하기 위해 요청을 건너뛰거나, latest를 사용할 수 있지만
+        // 여기서는 에러 방지를 위해 일단 건너뛰고, 이전 데이터로 채우도록 함 (null 반환)
+        // 필요하다면 latest를 한 번 더 호출할 수도 있음
+        // url = ...
       }
 
       // Fawaz Ahmed Currency API 사용 (무료, API 키 불필요, CDN 기반)
       // https://github.com/fawazahmed0/exchange-api
+      // i === 1 (어제)인 경우 404가 자주 발생하므로 스킵 (null 처리)
+      if (i === 1) {
+        promises.push(
+          Promise.resolve({
+            date: `${date.getMonth() + 1}.${String(date.getDate()).padStart(2, '0')}`,
+            krw: null,
+            ars: null,
+          })
+        )
+        continue
+      }
+
       promises.push(
         fetch(url)
           .then((res) => {
-            if (!res.ok) throw new Error(`Status ${res.status}`)
+            if (!res.ok) {
+              if (res.status === 404) {
+                // 404 is expected for future dates or just-changed dates
+                return null
+              }
+              throw new Error(`Status ${res.status}`)
+            }
             return res.json()
           })
-          .then((data) => ({
-            date: `${date.getMonth() + 1}.${String(date.getDate()).padStart(2, '0')}`,
-            krw: data.usd?.krw || null,
-            ars: data.usd?.ars || null,
-          }))
+          .then((data) => {
+            if (!data) return null
+            return {
+              date: `${date.getMonth() + 1}.${String(date.getDate()).padStart(2, '0')}`,
+              krw: data.usd?.krw || null,
+              ars: data.usd?.ars || null,
+            }
+          })
           .catch((err) => {
-            // 404 등의 에러 발생 시 (아직 오늘 데이터가 없는 경우 등)
-            // 전날 데이터나 null을 반환하도록 처리할 수 있으나, 여기서는 null로 처리하고
-            // 그래프에서 null 값은 건너뛰거나 이전 값으로 채우는 로직이 필요할 수 있음
-            // 우선은 에러 로그만 남기고 null 반환
-            console.warn(
-              `Data not found for ${dateStr}, likely due to timezone or future date.`,
-              err
-            )
+            // 404 에러는 자연스러운 현상이므로 경고 로그도 최소화
+            // console.debug(`Skipping data for ${dateStr}:`, err)
             return {
               date: `${date.getMonth() + 1}.${String(date.getDate()).padStart(2, '0')}`,
               krw: null,
@@ -64,30 +84,32 @@ export const fetchHistoricalRates = async () => {
     // 모든 요청 완료 대기
     const results = await Promise.all(promises)
 
-    // 결과 정리
-    results.forEach((result) => {
-      dates.push(result.date)
+    // 결과 정리 (null 값 제외)
+    results
+      .filter((result) => result !== null)
+      .forEach((result) => {
+        dates.push(result.date)
 
-      let krw = result.krw
-      let ars = result.ars
+        let krw = result.krw
+        let ars = result.ars
 
-      // 보정 로직: 현재 값이 null이면 배열의 마지막 값(어제 값)을 사용
-      // 주의: krwRates에 이미 들어있는 값은 문자열(toFixed됨)일 수 있음
-      if (krw === null && krwRates.length > 0) {
-        krw = krwRates[krwRates.length - 1] // 이미 문자열임
-      } else if (krw !== null) {
-        krw = Number(krw).toFixed(2) // 숫자인 경우 포맷팅
-      }
+        // 보정 로직: 현재 값이 null이면 배열의 마지막 값(어제 값)을 사용
+        // 주의: krwRates에 이미 들어있는 값은 문자열(toFixed됨)일 수 있음
+        if (krw === null && krwRates.length > 0) {
+          krw = krwRates[krwRates.length - 1] // 이미 문자열임
+        } else if (krw !== null) {
+          krw = Number(krw).toFixed(2) // 숫자인 경우 포맷팅
+        }
 
-      if (ars === null && arsRates.length > 0) {
-        ars = arsRates[arsRates.length - 1] // 이미 문자열임
-      } else if (ars !== null) {
-        ars = Number(ars).toFixed(2) // 숫자인 경우 포맷팅
-      }
+        if (ars === null && arsRates.length > 0) {
+          ars = arsRates[arsRates.length - 1] // 이미 문자열임
+        } else if (ars !== null) {
+          ars = Number(ars).toFixed(2) // 숫자인 경우 포맷팅
+        }
 
-      krwRates.push(krw)
-      arsRates.push(ars)
-    })
+        krwRates.push(krw)
+        arsRates.push(ars)
+      })
 
     return {
       dates,

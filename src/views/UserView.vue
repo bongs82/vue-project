@@ -146,10 +146,7 @@ onMounted(() => {
         <div>
           <input
             v-model="newMemberId"
-            @blur="
-              newMemberIdValid = newMemberId.length > 0
-              newMemberIdExist = false
-            "
+            @blur="((newMemberIdValid = newMemberId.length > 0), (newMemberIdExist = false))"
             :class="{ error: !newMemberIdValid || newMemberIdExist }"
             placeholder="Enter ID"
           />
